@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.xiaoR.mp.domain.dto.UserFormDTO;
 import com.xiaoR.mp.domain.po.Result;
 import com.xiaoR.mp.domain.po.User;
+import com.xiaoR.mp.domain.query.UserQuery;
 import com.xiaoR.mp.domain.vo.UserVO;
 import com.xiaoR.mp.service.IUserService;
 import io.swagger.annotations.Api;
@@ -87,5 +88,14 @@ public class UserController {
             return Result.error(e.getMessage());
         }
         return Result.success(String.format("成功扣除用户(id: %s) %d 余额",  id, money));
+    }
+
+    @ApiOperation("根据复杂条件查询用户接口")
+    @GetMapping("/list")
+    public List<UserVO> selectUsers(UserQuery query) {
+        // 1. 查询用户PO
+        List<User> users = userService.queryUsers(query);
+        // 2. 拷贝PO到VO
+        return BeanUtil.copyToList(users, UserVO.class);
     }
 }

@@ -2,9 +2,12 @@ package com.xiaoR.mp.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaoR.mp.domain.po.User;
+import com.xiaoR.mp.domain.query.UserQuery;
 import com.xiaoR.mp.mapper.UserMapper;
 import com.xiaoR.mp.service.IUserService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author xiaoR
@@ -38,5 +41,17 @@ public class IUerServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         // 4. 扣除用户余额
         baseMapper.deductBalance(id, money);
+    }
+
+    @Override
+    public List<User> queryUsers(UserQuery query) {
+        log.debug("开始查询用户, 参数: {}");
+        return lambdaQuery()
+                // 注意写上条件!
+                .like(query.getName() != null, User::getUsername, query.getName())
+                .eq(query.getStatus() != null, User::getStatus, query.getStatus())
+                .ge(query.getMinBalance() != null, User::getBalance, query.getMinBalance())
+                .le(query.getMaxBalance() != null, User::getBalance, query.getMaxBalance())
+                .list();
     }
 }

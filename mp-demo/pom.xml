@@ -8,7 +8,7 @@
         <version>2.7.12</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.itheima.mp</groupId>
+    <groupId>com.xiaoR.mp</groupId>
     <artifactId>mp-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mp-demo</name>
