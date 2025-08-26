@@ -80,10 +80,18 @@ public class UserController {
     @ApiOperation("根据ids查询用户接口")
     @GetMapping
     public List<UserVO> selectUserByIds(@ApiParam("用户id集合") @RequestParam List<Long> ids) {
-        // 1. 查询用户PO
-        List<User> users = userService.listByIds(ids);
-        // 2. 拷贝PO到VO
-        return BeanUtil.copyToList(users, UserVO.class);
+        /**
+         * 查询用户基础信息
+         */
+//        // 1. 查询用户PO
+//        List<User> users = userService.listByIds(ids);
+//        // 2. 拷贝PO到VO
+//        return BeanUtil.copyToList(users, UserVO.class);
+
+        /**
+         * 查询用户基础信息及地址信息
+         */
+        return userService.queryUsersAndAddressesByIds(ids);
     }
 
     @ApiOperation("扣除用户余额接口")

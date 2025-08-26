@@ -14,7 +14,11 @@ import com.xiaoR.mp.mapper.UserMapper;
 import com.xiaoR.mp.service.IUserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaoR
@@ -90,5 +94,35 @@ public class IUerServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userVO.setAddresses(BeanUtil.copyToList(addresses, AddressVO.class));
         }
         return userVO;
+    }
+
+    @Override
+    public List<UserVO> queryUsersAndAddressesByIds(List<Long> ids) {
+        // 1. 查询用户基本信息
+        List<User> users = this.listByIds(ids);
+
+        // 2. 获取用户的ids : 此处单独获取的原因是,外部传入的ids可能会不合法
+        List<Long> userIds = users.stream().map(User::getId).collect(Collectors.toList());
+
+        // 3. 批量查询用户地址信息
+        List<Address> addresses = Db.lambdaQuery(Address.class).in(Address::getUserId, userIds).list();
+        Map<Long, List<AddressVO>> addressVOMap = new HashMap<>(0);
+        if (CollUtil.isNotEmpty(addresses)) {
+            List<AddressVO> addressVOS = BeanUtil.copyToList(addresses, AddressVO.class);
+            // 用户地址集合分组:
+            addressVOMap= addressVOS.stream().collect(Collectors.groupingBy(AddressVO::getUserId));
+        }
+
+        // 4. 封装UserVO
+        ArrayList<UserVO> userVOS = new ArrayList<>(users.size());
+        for (User user : users) {
+            // 基本信息转VO
+            UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
+            // 地址信息转VO
+            userVO.setAddresses(addressVOMap.get(user.getId()));
+            userVOS.add(userVO);
+        }
+
+        return userVOS;
     }
 }
