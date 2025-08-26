@@ -1,5 +1,6 @@
 package com.xiaoR.mp.domain.po;
 
+import com.xiaoR.mp.domain.model.UserStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,7 @@ public class User {
     /**
      * 使用状态（1正常 2冻结）
      */
-    private Integer status;
+    private UserStatus status;
 
     /**
      * 账户余额

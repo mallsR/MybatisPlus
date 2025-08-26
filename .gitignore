@@ -1,0 +1,24 @@
+# Maven忽略目录
+/mp-demo/target/
+
+# IntelliJ IDEA
+.idea/
+*.ipr
+*.iml
+
+# 临时文件
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+
+# 打包文件
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+.gitignore

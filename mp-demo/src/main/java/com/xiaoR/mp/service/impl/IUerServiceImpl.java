@@ -41,7 +41,7 @@ public class IUerServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = this.getById(id);   // 由于继承了ServiceImpl类, 所以可以直接使用getById方法
 
         // 2. 校验用户是否存在
-        if (user == null || user.getStatus() == 2) {
+        if (user == null || user.getStatus() == UserStatus.FROZEN) {
             throw new RuntimeException("用户状态非法");
         }
 
@@ -79,7 +79,7 @@ public class IUerServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public UserVO queryUserAndAddressById(Long id) {
         // 1. 查询用户基本信息
         User user = this.getById(id);
-        if (user == null || user.getStatus() == UserStatus.FROZEN.getStatus()) {
+        if (user == null || user.getStatus() == UserStatus.FROZEN) {
             throw new RuntimeException("用户不存在或已冻结");
         }
 
