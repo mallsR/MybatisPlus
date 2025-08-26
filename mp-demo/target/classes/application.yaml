@@ -6,7 +6,7 @@ spring:
     password: 1234
 logging:
   level:
-    com.itheima: debug
+    com.xiaoR: debug
   pattern:
     dateformat: HH:mm:ss
 mybatis:
