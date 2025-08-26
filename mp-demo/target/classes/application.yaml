@@ -11,6 +11,11 @@ logging:
     dateformat: HH:mm:ss
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
+mybtis-plus:
+  configuration:
+    default-enum-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+
+
 knife4j:
   enable: true
   openapi:

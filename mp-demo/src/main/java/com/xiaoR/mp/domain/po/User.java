@@ -1,11 +1,16 @@
 package com.xiaoR.mp.domain.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.xiaoR.mp.domain.model.UserStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+// 此处指定autoResultMap = true,开启自动结果集映射, 告诉MyBatis-Plus,对象需要嵌套生成
+@TableName(value = "user", autoResultMap = true)
 public class User {
 
     /**
@@ -31,7 +36,9 @@ public class User {
     /**
      * 详细信息
      */
-    private String info;
+    // 此处利用JacksonTypeHandler实现数据库json字段与pojo对象相互转换
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private UserInfo info;
 
     /**
      * 使用状态（1正常 2冻结）

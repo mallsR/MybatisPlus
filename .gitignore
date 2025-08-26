@@ -1,5 +1,5 @@
 # Maven忽略目录
-/mp-demo/target/
+/mp-demo/target/*
 
 # IntelliJ IDEA
 .idea/
