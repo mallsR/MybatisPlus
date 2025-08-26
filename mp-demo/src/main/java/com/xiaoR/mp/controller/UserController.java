@@ -63,11 +63,18 @@ public class UserController {
     @ApiOperation("根据id查询用户接口")
     @GetMapping("/{id}")
     public UserVO selectUserById(@ApiParam("用户id") @PathVariable Long id) {
-        User user = userService.getById(id);
-        UserVO userVO = new UserVO();
-        BeanUtil.copyProperties(user, userVO);
+        /**
+         * 只查询用户基本信息
+         */
+//        User user = userService.getById(id);
+//        UserVO userVO = new UserVO();
+//        BeanUtil.copyProperties(user, userVO);
 //        BeanUtil.copyProperties(user, UserVO.class);
-        return userVO;
+
+        /**
+         * 查询用户基本信息及地址信息
+         */
+        return userService.queryUserAndAddressById(id);
     }
 
     @ApiOperation("根据ids查询用户接口")
