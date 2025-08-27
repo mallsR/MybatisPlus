@@ -2,8 +2,11 @@ package com.xiaoR.mp.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
+import com.xiaoR.mp.domain.dto.PageDTO;
 import com.xiaoR.mp.domain.model.UserStatus;
 import com.xiaoR.mp.domain.po.Address;
 import com.xiaoR.mp.domain.po.User;
@@ -14,10 +17,7 @@ import com.xiaoR.mp.mapper.UserMapper;
 import com.xiaoR.mp.service.IUserService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -124,5 +124,42 @@ public class IUerServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         return userVOS;
+    }
+
+    @Override
+    public PageDTO<UserVO> pageQuery(UserQuery query) {
+        // 1. 分页查询用户的基本信息
+        // 1.1 构建分页条件
+        Page<User> pageQuery = new Page<User>(query.getPageNo(), query.getPageSize());
+        // 1.2 构建排序条件
+        if (query.getSortBy() != null) {
+            pageQuery.addOrder(new OrderItem(query.getSortBy(), query.getIsAsc()));
+        } else {
+            pageQuery.addOrder(new OrderItem("update_time", false));
+        }
+
+        // 2. 分页查询
+        Page<User> userPage = lambdaQuery()
+                .like(query.getName() != null, User::getUsername, query.getName())
+                .eq(query.getStatus() != null, User::getStatus, query.getStatus())
+                .ge(query.getMinBalance() != null, User::getBalance, query.getMinBalance())
+                .le(query.getMaxBalance() != null, User::getBalance, query.getMaxBalance())
+                .page(pageQuery);
+
+        // 3. 封装VO结果
+        PageDTO<UserVO> pageDTO = new PageDTO<>();
+        // 3.1 封装分页描述
+        pageDTO.setTotal(userPage.getTotal());
+        pageDTO.setPages(userPage.getPages());
+        // 3.2 封装分页数据
+        List<User> records = userPage.getRecords();
+        // 如果没有数据
+        if (CollUtil.isEmpty(records)) {
+            pageDTO.setList(Collections.emptyList());
+            return pageDTO;
+        }
+        List<UserVO> userVOS = BeanUtil.copyToList(records, UserVO.class);
+        pageDTO.setList(userVOS);
+        return pageDTO;
     }
 }

@@ -1,6 +1,7 @@
 package com.xiaoR.mp.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.xiaoR.mp.domain.dto.PageDTO;
 import com.xiaoR.mp.domain.dto.UserFormDTO;
 import com.xiaoR.mp.domain.po.Result;
 import com.xiaoR.mp.domain.po.User;
@@ -94,6 +95,13 @@ public class UserController {
         return userService.queryUsersAndAddressesByIds(ids);
     }
 
+    @ApiOperation("分页查询用户接口")
+    @GetMapping("/page")
+    public PageDTO<UserVO> pageQuery(UserQuery query) {
+        log.info("开始分页查询用户, 参数: {}", query);
+        return userService.pageQuery(query);
+    }
+
     @ApiOperation("扣除用户余额接口")
     @PutMapping("/{id}/deduction/{money}")
     public Result deductBalance(@PathVariable Long id, @PathVariable int money) {
@@ -113,4 +121,6 @@ public class UserController {
         // 2. 拷贝PO到VO
         return BeanUtil.copyToList(users, UserVO.class);
     }
+
+
 }

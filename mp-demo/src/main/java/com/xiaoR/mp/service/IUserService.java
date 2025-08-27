@@ -1,6 +1,7 @@
 package com.xiaoR.mp.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xiaoR.mp.domain.dto.PageDTO;
 import com.xiaoR.mp.domain.po.User;
 import com.xiaoR.mp.domain.query.UserQuery;
 import com.xiaoR.mp.domain.vo.UserVO;
@@ -15,4 +16,6 @@ public interface IUserService extends IService<User>{
     UserVO queryUserAndAddressById(Long id);
 
     List<UserVO> queryUsersAndAddressesByIds(List<Long> ids);
+
+    PageDTO<UserVO> pageQuery(UserQuery query);
 }
